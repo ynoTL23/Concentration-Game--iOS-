@@ -11,7 +11,7 @@ class ViewController: UIViewController {
     
     // lazy variable: var will get init the first time it gets referenced
     // lazy vars can't have observers, like didSet{}
-    lazy var game = Concentration(numberOfPairsOfCards: ((cardButtons.count + 1) / 2))
+    lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
     
     var flipCount = 0 {
         didSet {
@@ -31,15 +31,21 @@ class ViewController: UIViewController {
     var emoji = [Int : String]()
     
     func emoji(for card: Card) -> String {
-        if let chosenEmoji = emoji[card.identifier] {
-            return emoji[card.identifier]!
-        } else {
-            return "?"
+//        if let chosenEmoji = emoji[card.identifier] {
+//            return emoji[card.identifier]!
+//        } else {
+//            return "?"
+//        }
+
+        if emoji[card.identifier] == nil, emojiChoices.count > 0 {
+            let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
+            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
         }
-        // return emoji(card.identifier) ?? "?"
-        // alt. method
+        // Alternative method
+        // go to dictionary, look for card's identifier
+         return emoji(card.identifier) ?? "?"
     }
-    
+
     @IBAction func touchedCard(_ sender: UIButton) {
         flipCount += 1
         if let cardNumber = cardButtons.index(of: sender) {
@@ -59,7 +65,7 @@ class ViewController: UIViewController {
                 button.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             } else { // else face down
                 button.setTitle("", for: UIControlState.normal)
-                button.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             }
         }
     }
