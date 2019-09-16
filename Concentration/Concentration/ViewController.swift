@@ -15,21 +15,27 @@ class ViewController: UIViewController {
     
     // 'lazy' var does not init before something calls for it
     // 'lazy' cannot have didSet{} / property observers
-    lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
+    private lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+    // game var is only used by VC, set to pvt
+    
+    private var numberOfPairsOfCards: Int {
+        return (cardButtons.count + 1) / 2
+    }
 
-    var flipCount = 0 {
+    // anyone can read this, but only VC can set the value
+    private(set) var flipCount = 0 {
         didSet {
             flipCountLabel.text = "Flips: \(flipCount)"
         }
     }
     
-    @IBOutlet weak var flipCountLabel: UILabel!
+    @IBOutlet private weak var flipCountLabel: UILabel!
 
     // var cardbuttons: Array<UIButton>
-    @IBOutlet var cardButtons: [UIButton]!
+    @IBOutlet private var cardButtons: [UIButton]!
 
-    
-    @IBAction func touchedCard(_ sender: UIButton) {
+    // only VC calls this
+    @IBAction private func touchedCard(_ sender: UIButton) {
         flipCount += 1
         if let cardNumber = cardButtons.index(of: sender) {
             game.chooseCard(at: cardNumber)
@@ -39,8 +45,7 @@ class ViewController: UIViewController {
         }
     }
 
-    func updateViewFromModel() {
-
+    private func updateViewFromModel() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
             let card = game.cards[index]
@@ -55,14 +60,14 @@ class ViewController: UIViewController {
 
     }
 
-    var emojiChoices = ["👻", "🎃", "☠️", "😈", "🍎", "🧟‍♂️", "🍬", "🍫", "🍭"]
+    private var emojiChoices = ["👻", "🎃", "☠️", "😈", "🍎", "🧟‍♂️", "🍬", "🍫", "🍭"]
 
     // identifier is an int
     // value is a string
-    var emoji: [Int: String]()
+    var emoji = [Int: String]()
     // var emoji: Dictionary<Int, String>()
 
-    func emoji(for card: Card) -> String {
+    private func emoji(for card: Card) -> String {
         // Dict returns an Optional ==> String?
         // Dictionary may or may not return a string
         
@@ -71,15 +76,31 @@ class ViewController: UIViewController {
             // gen random num from zero to end-value, exclusive
             // arc4rand only works with unsigned ints (UInt32: is a struct as well)
             // you must convert beforehand
-            let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
+            // let randomIndex = emojiChoices.count.arc4random
             // randomIndex will be used as an Int for array, must be converted to Int
 
-            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+            // "arc4random" is associated/extension of Int, emojiChoise.count will return an int
+            emoji[card.identifier] = emojiChoices.remove(at: emojiChoices.count.arc4random)
         }
 
         // returns 'emoji[card.identifier]' but if nil, return "?"
         return emoji[card.identifier] ?? "?"
     }
 
+}
+
+
+// extend Int for arc4random func
+extension Int {
+    var arc4random: Int {
+        // if value > 0, return int
+        if (self > 0) {
+            return Int(arc4random_uniform(UInt32(self)))
+        } else if (self < 0) { // value is negative
+            return -Int(arc4random_uniform(UInt32(-self)))
+        } else { // value is zero
+            return 0
+        }
+    }
 }
 
