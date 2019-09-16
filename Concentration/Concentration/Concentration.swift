@@ -45,7 +45,7 @@ class Concentration {
     internal func chooseCard(at index: Int) {
         // error handle
         // check if current index is in 'cards' arrays
-        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index): chosen index not valid")
+//        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index): chosen index not valid")
         // else, print error statement and crash app
         
         // if card is not matched
@@ -83,7 +83,23 @@ class Concentration {
         }
 
         // TODO: Shuffle the cards
+        shuffleCards()
 
     }
-
+    
+    private func shuffleCards() {
+        var shuffledDeck = [Card]()
+        
+        for _ in cards {
+            let picked = cards.count.arc4random
+            shuffledDeck.append(cards.remove(at: cards.count.arc4random))
+            print("Appended: \(picked)")
+        }
+        
+        cards = shuffledDeck
+        for index in cards.indices {
+            cards[index].isFaceUp = true
+        }
+    }
+    
 }
