@@ -60,8 +60,6 @@ class ViewController: UIViewController {
 
     }
 
-    private var emojiChoices = ["👻", "🎃", "☠️", "😈", "🧟‍♂️", "🍬", "🍫", "🍭"]
-    
     private var themes = ["Halloween":      ["👻", "🎃", "☠️", "😈", "🧟‍♂️", "🍬", "🍫", "🍭"],
                          ["Christmas":      ["🎁", "🎅🏻", "🎄", "🦌", "🥛", "🍪", "❄️", "⛄️"],
                          ["Transportation": ["🚒", "🚲", "✈️", "🚁", "⛵️", "🚀", "🚑", "🚂"],
@@ -69,6 +67,9 @@ class ViewController: UIViewController {
                          ["Sports":         ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🎱", "🏓"],
                          ["Country Flags":  ["🇺🇸", "🇬🇧", "🇨🇦", "🇦🇺", "🇲🇽", "🇩🇪", "🇰🇷", "🇮🇳"]
                          ]
+
+    private var randomIndex = themes.count.arc4random
+    private var emojiChoices = Array(themes.values)[randomIndex]
 
     // identifier is an int
     // value is a string
