@@ -13,6 +13,7 @@ class Concentration {
     private(set) var cards = [Card]()
     // others can access but not set
     
+    lazy private(set) var flipCount
     
     // return the one and only face up card
     // if there isnt JUST one face up card, return nil
@@ -48,6 +49,8 @@ class Concentration {
 //        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index): chosen index not valid")
         // else, print error statement and crash app
         
+        flipCount += 1 // card flipped over
+        
         // if card is not matched
         if !cards[index].isMatched {
             // if only one faceup and not the same index
@@ -68,6 +71,9 @@ class Concentration {
     }
 
     init(numberOfPairsOfCards: Int) {
+        
+        flipCount = 0
+        
         // error handle, make sure num of cards is valid
         assert(numberOfPairsOfCards > 0, "Concentration.init(\(numberOfPairsOfCards): You must have at least one pair of cards")
 
@@ -87,6 +93,7 @@ class Concentration {
 
     }
     
+    // shuffles cards before placing onto boards
     private func shuffleCards() {
         var shuffledDeck = [Card]()
         

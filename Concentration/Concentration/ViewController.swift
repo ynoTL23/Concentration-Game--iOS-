@@ -21,13 +21,6 @@ class ViewController: UIViewController {
     private var numberOfPairsOfCards: Int {
         return (cardButtons.count + 1) / 2
     }
-
-    // anyone can read this, but only VC can set the value
-    private(set) var flipCount = 0 {
-        didSet {
-            flipCountLabel.text = "Flips: \(flipCount)"
-        }
-    }
     
     @IBOutlet private weak var flipCountLabel: UILabel!
 
@@ -36,9 +29,9 @@ class ViewController: UIViewController {
 
     // only VC calls this
     @IBAction private func touchedCard(_ sender: UIButton) {
-        flipCount += 1
         if let cardNumber = cardButtons.index(of: sender) {
             game.chooseCard(at: cardNumber)
+            flipCountLabel.text = "Flips: \(game.flipCount)"
             updateViewFromModel()
         } else {
             print("Chosen card not found in cardButtons")
@@ -60,16 +53,17 @@ class ViewController: UIViewController {
 
     }
 
-    private var themes = ["Halloween":      ["👻", "🎃", "☠️", "😈", "🧟‍♂️", "🍬", "🍫", "🍭"],
+    private var themes = ["Halloween":      ["👻", "🎃", "☠️", "😈", "🙀", "🍬", "🍫", "🍭"],
                          ["Christmas":      ["🎁", "🎅🏻", "🎄", "🦌", "🥛", "🍪", "❄️", "⛄️"],
                          ["Transportation": ["🚒", "🚲", "✈️", "🚁", "⛵️", "🚀", "🚑", "🚂"],
-                         ["Food":           ["🍿", "🌮", "🍔", "🌭", "🍟", "🍕", "🥪", "🍗"],
+                         ["Food":           ["🍿", "🌮", "🍔", "🌭", "🍟", "🍕", "🍇", "🍗"],
                          ["Sports":         ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🎱", "🏓"],
                          ["Country Flags":  ["🇺🇸", "🇬🇧", "🇨🇦", "🇦🇺", "🇲🇽", "🇩🇪", "🇰🇷", "🇮🇳"]
                          ]
 
-    private var randomIndex = themes.count.arc4random
-    private var emojiChoices = Array(themes.values)[randomIndex]
+    private var randomIndex = themes.keys.count.arc4random // pick index of a theme from dict
+    private var themeName = Array(themes.keys)[randomIndex] // position/name of theme in dict
+    private var emojiChoices = themes[themeName] // set and use theme for game
 
     // identifier is an int
     // value is a string
