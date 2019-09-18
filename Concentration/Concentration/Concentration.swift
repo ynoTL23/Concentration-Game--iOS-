@@ -13,7 +13,7 @@ class Concentration {
     private(set) var cards = [Card]()
     // others can access but not set
     
-    lazy private(set) var flipCount
+    private(set) var flipCount: Int
     
     // return the one and only face up card
     // if there isnt JUST one face up card, return nil

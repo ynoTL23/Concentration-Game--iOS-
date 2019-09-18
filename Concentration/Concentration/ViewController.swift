@@ -53,17 +53,17 @@ class ViewController: UIViewController {
 
     }
 
-    private var themes = ["Halloween":      ["👻", "🎃", "☠️", "😈", "🙀", "🍬", "🍫", "🍭"],
-                         ["Christmas":      ["🎁", "🎅🏻", "🎄", "🦌", "🥛", "🍪", "❄️", "⛄️"],
-                         ["Transportation": ["🚒", "🚲", "✈️", "🚁", "⛵️", "🚀", "🚑", "🚂"],
-                         ["Food":           ["🍿", "🌮", "🍔", "🌭", "🍟", "🍕", "🍇", "🍗"],
-                         ["Sports":         ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🎱", "🏓"],
-                         ["Country Flags":  ["🇺🇸", "🇬🇧", "🇨🇦", "🇦🇺", "🇲🇽", "🇩🇪", "🇰🇷", "🇮🇳"]
+    private var themes = [
+                         "Halloween":      ["👻", "🎃", "☠️", "😈", "🙀", "🍬", "🍫", "🍭"],
+                         "Christmas":      ["🎁", "🎅🏻", "🎄", "🦌", "🥛", "🍪", "❄️", "⛄️"],
+                         "Transportation": ["🚒", "🚲", "✈️", "🚁", "⛵️", "🚀", "🚑", "🚂"],
+                         "Food":           ["🍿", "🌮", "🍔", "🌭", "🍟", "🍕", "🍇", "🍗"],
+                         "Sports":         ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🎱", "🏓"],
+                         "Country Flags":  ["🇺🇸", "🇬🇧", "🇨🇦", "🇦🇺", "🇲🇽", "🇩🇪", "🇰🇷", "🇮🇳"]
                          ]
-
-    private var randomIndex = themes.keys.count.arc4random // pick index of a theme from dict
-    private var themeName = Array(themes.keys)[randomIndex] // position/name of theme in dict
-    private var emojiChoices = themes[themeName] // set and use theme for game
+    
+    lazy private var index = themes.count.arc4random // select random index from [themes] dict
+    lazy private var emojiChoices = Array(themes.values)[index] // set and use theme for game
 
     // identifier is an int
     // value is a string
