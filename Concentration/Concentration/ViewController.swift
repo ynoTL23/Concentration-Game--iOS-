@@ -50,6 +50,18 @@ class ViewController: UIViewController {
                 button.backgroundColor = card.isMatched ? #colorLiteral(red: 01, green: 0, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             }
         }
+        
+        var matched: Int = 0
+        for card in game.cards {
+            if card.isMatched == true {
+                matched += 1
+                if matched >= game.cards.count {
+                    print("WIN")
+                }
+            } else {
+                break
+            }
+        }
 
     }
 

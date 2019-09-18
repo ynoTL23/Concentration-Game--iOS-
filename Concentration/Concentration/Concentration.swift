@@ -46,7 +46,7 @@ class Concentration {
     internal func chooseCard(at index: Int) {
         // error handle
         // check if current index is in 'cards' arrays
-//        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index): chosen index not valid")
+        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index): chosen index not valid")
         // else, print error statement and crash app
         
         flipCount += 1 // card flipped over
@@ -57,7 +57,7 @@ class Concentration {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
                 // check if cards match
                 if cards[matchIndex].identifier == cards[index].identifier {
-                    // they match!
+                    // THEY MATCH!
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
                 }
@@ -68,6 +68,7 @@ class Concentration {
                 indexOfOneAndOnlyFaceUpCard = index
             }
         }
+        
     }
 
     init(numberOfPairsOfCards: Int) {
