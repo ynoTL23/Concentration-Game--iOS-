@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Concentration {
+struct Concentration {
 
     // init 'cards' array
     private(set) var cards = [Card]()
@@ -42,7 +42,7 @@ class Concentration {
     }
 
     // accessed by others
-    internal func chooseCard(at index: Int) {
+    internal mutating func chooseCard(at index: Int) {
         // error handle
         // check if current index is in 'cards' arrays
         assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index): chosen index not valid")
