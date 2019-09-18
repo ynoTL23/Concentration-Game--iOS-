@@ -95,18 +95,19 @@ class Concentration {
     
     // shuffles cards before placing onto boards
     private func shuffleCards() {
-        var shuffledDeck = [Card]()
+        var shuffledDeck = [Card]() // temp deck
         
         for _ in cards {
-            let picked = cards.count.arc4random
-            shuffledDeck.append(cards.remove(at: cards.count.arc4random))
-            print("Appended: \(picked)")
+            let randomCard = cards.count.arc4random // pick random card
+            shuffledDeck.append(cards.remove(at: randomCard)) // append card to temp deck
         }
         
         cards = shuffledDeck
         for index in cards.indices {
             cards[index].isFaceUp = true
         }
+        
+        print("Shuffled cards!")
     }
     
 }
