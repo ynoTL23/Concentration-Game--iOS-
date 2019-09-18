@@ -9,12 +9,6 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    // allow VC and Concentration to comm with each other
-    // Concentration has a free init() when all vars are init'd
-    // structs get free init() too but all vars need to re-init'd
-    
-    // 'lazy' var does not init before something calls for it
-    // 'lazy' cannot have didSet{} / property observers
     private lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
     // game var is only used by VC, set to pvt
     
@@ -24,10 +18,9 @@ class ViewController: UIViewController {
     
     @IBOutlet private weak var flipCountLabel: UILabel!
 
-    // var cardbuttons: Array<UIButton>
     @IBOutlet private var cardButtons: [UIButton]!
 
-    // only VC calls this
+    // detect if card was touched
     @IBAction private func touchedCard(_ sender: UIButton) {
         if let cardNumber = cardButtons.index(of: sender) {
             game.chooseCard(at: cardNumber)
@@ -38,6 +31,7 @@ class ViewController: UIViewController {
         }
     }
 
+    // update the board
     private func updateViewFromModel() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
@@ -51,14 +45,21 @@ class ViewController: UIViewController {
             }
         }
         
+        // check if all cards have been found and matched
         var matched: Int = 0
         for card in game.cards {
-            if card.isMatched == true {
+            if card.isMatched == true { // is card matched?
                 matched += 1
-                if matched >= game.cards.count {
-                    print("WIN")
+                if matched >= game.cards.count { // game has been won if all cards found
+                    print("All cards have been found!")
+                    
+                    // clear the board
+                    for button in cardButtons {
+                        button.isHidden = true
+                        button.isEnabled = false
+                    }
                 }
-            } else {
+            } else { // there is still some cards left
                 break
             }
         }
@@ -77,28 +78,17 @@ class ViewController: UIViewController {
     lazy private var index = themes.count.arc4random // select random index from [themes] dict
     lazy private var emojiChoices = Array(themes.values)[index] // set and use theme for game
 
-    // identifier is an int
-    // value is a string
     var emoji = [Int: String]()
-    // var emoji: Dictionary<Int, String>()
 
     private func emoji(for card: Card) -> String {
-        // Dict returns an Optional ==> String?
-        // Dictionary may or may not return a string
         
         // if emoji not set and we have emoji choices, put in dict
         if emoji[card.identifier] == nil, emojiChoices.count > 0 {
-            // gen random num from zero to end-value, exclusive
-            // arc4rand only works with unsigned ints (UInt32: is a struct as well)
-            // you must convert beforehand
-            // let randomIndex = emojiChoices.count.arc4random
-            // randomIndex will be used as an Int for array, must be converted to Int
-
             // "arc4random" is associated/extension of Int, emojiChoise.count will return an int
             emoji[card.identifier] = emojiChoices.remove(at: emojiChoices.count.arc4random)
         }
 
-        // returns 'emoji[card.identifier]' but if nil, return "?"
+        // returns 'emoji[card.identifier]' BUT if nil, return "?"
         return emoji[card.identifier] ?? "?"
     }
 

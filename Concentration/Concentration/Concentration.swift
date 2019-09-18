@@ -42,7 +42,6 @@ class Concentration {
         }
     }
 
-    // accessed by others
     internal func chooseCard(at index: Int) {
         // error handle
         // check if current index is in 'cards' arrays
@@ -78,15 +77,10 @@ class Concentration {
         // error handle, make sure num of cards is valid
         assert(numberOfPairsOfCards > 0, "Concentration.init(\(numberOfPairsOfCards): You must have at least one pair of cards")
 
-        // x..<value ==> range from 0 UP TO end-value
         // x...value ==> range from x to end-value, including end-value
         for _ in 1...numberOfPairsOfCards {
             let card = Card()
             cards += [card, card] // copy cards into array
-
-            // 'card' gets copied over into array 'cards'
-            // cards.append(card)
-            // cards.append(card)
         }
 
         // TODO: Shuffle the cards
@@ -103,11 +97,10 @@ class Concentration {
             shuffledDeck.append(cards.remove(at: randomCard)) // append card to temp deck
         }
         
-        cards = shuffledDeck
+        cards = shuffledDeck // set board to shuffledDeck
         for index in cards.indices {
-            cards[index].isFaceUp = true
+            cards[index].isFaceUp = false
         }
-        
         print("Shuffled cards!")
     }
     
