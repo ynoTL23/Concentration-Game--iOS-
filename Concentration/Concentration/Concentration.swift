@@ -12,9 +12,10 @@ class Concentration {
     // init 'cards' array
     private(set) var cards = [Card]()
     private var seenBefore: [Int] = []
+    private var initialMove: Date!
     
     private(set) var flipCount: Int
-    private(set) var playerScore: Int = 0
+    private(set) var playerScore: Int
     
     // return the one and only face up card
     // if there isnt JUST one face up card, return nil
@@ -56,8 +57,15 @@ class Concentration {
             
             // check if card has been seen before
             if seenBefore.contains(cards[index].identifier) {
-                // penalize, -1 pts
-                playerScore -= 1
+                // Extra credit: Points based on time
+                let differenceInTime = initialMove.timeIntervalSince(initialMove) // returns a Double
+                // 5 = max points to be deducted
+                let calculatedPenalty = Int((5) / (differenceInTime + 1)) // (+ 1) avoid division by zero
+                print("Penalty -\(calculatedPenalty)")
+                
+                playerScore -= calculatedPenalty
+                
+                initialMove = Date()
             } else {
                 // else, add it to list of cards that have been seen before
                 seenBefore.append(cards[index].identifier)
@@ -69,7 +77,16 @@ class Concentration {
                     // THEY MATCH!
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
-                    playerScore += 2 // give 2 pts
+                    
+                    // Extra credit: Points based on time
+                    let differenceInTime = initialMove.timeIntervalSince(initialMove)
+                    // 10 = max points to be rewarded
+                    let calculatedReward = Int((20) / (differenceInTime + 1))
+                    print("Reward +\(calculatedReward)")
+                    
+                    playerScore += calculatedReward // give 2 pts
+                    
+                    initialMove = Date()
                 }
                 cards[index].isFaceUp = true
             } else {
@@ -83,6 +100,7 @@ class Concentration {
 
     init(numberOfPairsOfCards: Int) {
         flipCount = 0
+        playerScore = 0
         
         // error handle, make sure num of cards is valid
         assert(numberOfPairsOfCards > 0, "Concentration.init(\(numberOfPairsOfCards): You must have at least one pair of cards")
@@ -95,6 +113,8 @@ class Concentration {
 
         // TODO: Shuffle the cards
         shuffleCards()
+        initialMove = Date()
+        
     }
     
     // shuffles cards before placing onto boards

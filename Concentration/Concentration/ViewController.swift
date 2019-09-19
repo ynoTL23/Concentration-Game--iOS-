@@ -20,7 +20,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var finalScoreLabel: UILabel!
     
     @IBOutlet private var cardButtons: [UIButton]!
-
+    @IBOutlet private var newGameButton: UIButton!
+    
     // detect if card was touched
     @IBAction private func touchedCard(_ sender: UIButton) {
         if let cardNumber = cardButtons.index(of: sender) {
@@ -34,17 +35,19 @@ class ViewController: UIViewController {
     
     // end game screen button
     @IBAction func newGameButtonTouched(_ sender: UIButton) {
+        print("New game ... ")
+        game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
         emojiChoices = setTheme()
-        
+
         // set the board, new them/emoji
         updateCardFaces()
-        
+
         // reset card status
         for var card in game.cards {
             card.isMatched = false
             card.isFaceUp = false
         }
-        
+
         // show the cards
         for button in cardButtons {
             button.isHidden = false
@@ -56,11 +59,10 @@ class ViewController: UIViewController {
         finalScoreLabel.isEnabled = false
         sender.isHidden = true
         sender.isEnabled = false
+        flipCountLabel.text = "Flips: \(game.flipCount)"
         flipCountLabel.isHidden = false
         flipCountLabel.isEnabled = true
     }
-    
-    @IBOutlet weak var newGameButton: UIButton!
     
     // update the board
     private func updateViewFromModel() {
@@ -74,7 +76,7 @@ class ViewController: UIViewController {
                 
                 if matched >= game.cards.count { // game has been won if all cards found
                     print("All cards have been found!")
-                    print("Game end!")
+                    print("Game ended!")
 
                     // clear the board
                     for button in cardButtons {
@@ -113,7 +115,8 @@ class ViewController: UIViewController {
         }
     }
     
-    func setTheme() -> [String] {
+    // Theme picked
+    private func setTheme() -> [String] {
         var themes = [
             "Halloween":      ["👻", "🎃", "☠️", "😈", "🙀", "🍬", "🍫", "🍭"],
             "Christmas":      ["🎁", "🎅🏻", "🎄", "🦌", "🥛", "🍪", "❄️", "⛄️"],
@@ -126,11 +129,10 @@ class ViewController: UIViewController {
         let index = themes.count.arc4random // select random index from [themes] dict
         return Array(themes.values)[index] // return the list/array of emojis
     }
-
     
     lazy private var emojiChoices = setTheme() // set and use theme for game
 
-    var emoji = [Int: String]()
+    private var emoji = [Int: String]()
 
     private func emoji(for card: Card) -> String {
         // if emoji not set and we have emoji choices, put in dict
