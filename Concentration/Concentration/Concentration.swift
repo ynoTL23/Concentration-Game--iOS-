@@ -11,9 +11,10 @@ class Concentration {
 
     // init 'cards' array
     private(set) var cards = [Card]()
-    // others can access but not set
+    private var seenBefore: [Int] = []
     
     private(set) var flipCount: Int
+    private(set) var playerScore: Int = 0
     
     // return the one and only face up card
     // if there isnt JUST one face up card, return nil
@@ -52,6 +53,15 @@ class Concentration {
         
         // if card is not matched
         if !cards[index].isMatched {
+            
+            // check if card has been seen before
+            if seenBefore.contains(cards[index].identifier) {
+                // penalize, -1 pts
+                playerScore -= 1
+            } else {
+                // else, add it to list of cards that have been seen before
+                seenBefore.append(cards[index].identifier)
+            }
             // if only one faceup and not the same index
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
                 // check if cards match
@@ -59,6 +69,7 @@ class Concentration {
                     // THEY MATCH!
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
+                    playerScore += 2 // give 2 pts
                 }
                 cards[index].isFaceUp = true
             } else {
@@ -71,7 +82,6 @@ class Concentration {
     }
 
     init(numberOfPairsOfCards: Int) {
-        
         flipCount = 0
         
         // error handle, make sure num of cards is valid
@@ -85,7 +95,6 @@ class Concentration {
 
         // TODO: Shuffle the cards
         shuffleCards()
-
     }
     
     // shuffles cards before placing onto boards

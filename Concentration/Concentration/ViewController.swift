@@ -17,7 +17,8 @@ class ViewController: UIViewController {
     }
     
     @IBOutlet private weak var flipCountLabel: UILabel!
-
+    @IBOutlet weak var finalScoreLabel: UILabel!
+    
     @IBOutlet private var cardButtons: [UIButton]!
 
     // detect if card was touched
@@ -30,9 +31,75 @@ class ViewController: UIViewController {
             print("Chosen card not found in cardButtons")
         }
     }
-
+    
+    // end game screen button
+    @IBAction func newGameButtonTouched(_ sender: UIButton) {
+        emojiChoices = setTheme()
+        
+        // set the board, new them/emoji
+        updateCardFaces()
+        
+        // reset card status
+        for var card in game.cards {
+            card.isMatched = false
+            card.isFaceUp = false
+        }
+        
+        // show the cards
+        for button in cardButtons {
+            button.isHidden = false
+            button.isEnabled = true
+        }
+        
+        // Hide the end game screen
+        finalScoreLabel.isHidden = true
+        finalScoreLabel.isEnabled = false
+        sender.isHidden = true
+        sender.isEnabled = false
+        flipCountLabel.isHidden = false
+        flipCountLabel.isEnabled = true
+    }
+    
+    @IBOutlet weak var newGameButton: UIButton!
+    
     // update the board
     private func updateViewFromModel() {
+        updateCardFaces()
+        
+        // check if all cards have been found and matched
+        var matched: Int = 0
+        for card in game.cards {
+            if card.isMatched == true { // is card matched?
+                matched += 1
+                
+                if matched >= game.cards.count { // game has been won if all cards found
+                    print("All cards have been found!")
+                    print("Game end!")
+
+                    // clear the board
+                    for button in cardButtons {
+                        button.isHidden = true
+                        button.isEnabled = false
+                    }
+                    
+                    // show end game screen
+                    finalScoreLabel.text = "Final Score: \(game.playerScore)"
+                    finalScoreLabel.isHidden = false
+                    finalScoreLabel.isEnabled = true
+                    newGameButton.isHidden = false
+                    newGameButton.isEnabled = true
+                    flipCountLabel.isHidden = true
+                    flipCountLabel.isEnabled = false
+                    
+                }
+            } else { // there is still some cards left
+                break
+            }
+        }
+    }
+    
+    // cards get updated with their right emoji, color, etc.
+    func updateCardFaces() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
             let card = game.cards[index]
@@ -44,44 +111,28 @@ class ViewController: UIViewController {
                 button.backgroundColor = card.isMatched ? #colorLiteral(red: 01, green: 0, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
             }
         }
+    }
+    
+    func setTheme() -> [String] {
+        var themes = [
+            "Halloween":      ["👻", "🎃", "☠️", "😈", "🙀", "🍬", "🍫", "🍭"],
+            "Christmas":      ["🎁", "🎅🏻", "🎄", "🦌", "🥛", "🍪", "❄️", "⛄️"],
+            "Transportation": ["🚒", "🚲", "✈️", "🚁", "⛵️", "🚀", "🚑", "🚂"],
+            "Food":           ["🍿", "🌮", "🍔", "🌭", "🍟", "🍕", "🍇", "🍗"],
+            "Sports":         ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🎱", "🏓"],
+            "Country Flags":  ["🇺🇸", "🇬🇧", "🇨🇦", "🇦🇺", "🇲🇽", "🇩🇪", "🇰🇷", "🇮🇳"]
+        ]
         
-        // check if all cards have been found and matched
-        var matched: Int = 0
-        for card in game.cards {
-            if card.isMatched == true { // is card matched?
-                matched += 1
-                if matched >= game.cards.count { // game has been won if all cards found
-                    print("All cards have been found!")
-                    
-                    // clear the board
-                    for button in cardButtons {
-                        button.isHidden = true
-                        button.isEnabled = false
-                    }
-                }
-            } else { // there is still some cards left
-                break
-            }
-        }
-
+        let index = themes.count.arc4random // select random index from [themes] dict
+        return Array(themes.values)[index] // return the list/array of emojis
     }
 
-    private var themes = [
-                         "Halloween":      ["👻", "🎃", "☠️", "😈", "🙀", "🍬", "🍫", "🍭"],
-                         "Christmas":      ["🎁", "🎅🏻", "🎄", "🦌", "🥛", "🍪", "❄️", "⛄️"],
-                         "Transportation": ["🚒", "🚲", "✈️", "🚁", "⛵️", "🚀", "🚑", "🚂"],
-                         "Food":           ["🍿", "🌮", "🍔", "🌭", "🍟", "🍕", "🍇", "🍗"],
-                         "Sports":         ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🎱", "🏓"],
-                         "Country Flags":  ["🇺🇸", "🇬🇧", "🇨🇦", "🇦🇺", "🇲🇽", "🇩🇪", "🇰🇷", "🇮🇳"]
-                         ]
     
-    lazy private var index = themes.count.arc4random // select random index from [themes] dict
-    lazy private var emojiChoices = Array(themes.values)[index] // set and use theme for game
+    lazy private var emojiChoices = setTheme() // set and use theme for game
 
     var emoji = [Int: String]()
 
     private func emoji(for card: Card) -> String {
-        
         // if emoji not set and we have emoji choices, put in dict
         if emoji[card.identifier] == nil, emojiChoices.count > 0 {
             // "arc4random" is associated/extension of Int, emojiChoise.count will return an int
