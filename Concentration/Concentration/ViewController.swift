@@ -64,7 +64,7 @@ class ViewController: UIViewController {
 
     // identifier is an int
     // value is a string
-    var emoji = [Int: String]()
+    private var emoji = [Card: String]()
     // var emoji: Dictionary<Int, String>()
 
     private func emoji(for card: Card) -> String {
@@ -72,19 +72,18 @@ class ViewController: UIViewController {
         // Dictionary may or may not return a string
         
         // if emoji not set and we have emoji choices, put in dict
-        if emoji[card.identifier] == nil, emojiChoices.count > 0 {
+        if emoji[card] == nil, emojiChoices.count > 0 {
+            // emojiChoices.count.arc4random
             // gen random num from zero to end-value, exclusive
             // arc4rand only works with unsigned ints (UInt32: is a struct as well)
             // you must convert beforehand
-            // let randomIndex = emojiChoices.count.arc4random
-            // randomIndex will be used as an Int for array, must be converted to Int
 
             // "arc4random" is associated/extension of Int, emojiChoise.count will return an int
-            emoji[card.identifier] = emojiChoices.remove(at: emojiChoices.count.arc4random)
+            emoji[card] = emojiChoices.remove(at: emojiChoices.count.arc4random)
         }
 
         // returns 'emoji[card.identifier]' but if nil, return "?"
-        return emoji[card.identifier] ?? "?"
+        return emoji[card] ?? "?"
     }
 
 }
