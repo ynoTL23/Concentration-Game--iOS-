@@ -25,11 +25,26 @@ class ViewController: UIViewController {
     // anyone can read this, but only VC can set the value
     private(set) var flipCount = 0 {
         didSet {
-            flipCountLabel.text = "Flips: \(flipCount)"
+            updateFlipCountLabel()
         }
     }
     
-    @IBOutlet private weak var flipCountLabel: UILabel!
+    private func updateFlipCountLabel() {
+        let attributes : [NSAttributedStringKey : Any] = [
+            .strokeColor: #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1),
+            .strokeWidth: 5
+        ]
+    
+        let attributedString = NSAttributedString(string: "Flips: \(flipCount)", attributes: attributes)
+    
+        flipCountLabel.attributedText = attributedString
+    }
+    
+    @IBOutlet private weak var flipCountLabel: UILabel! {
+        didSet {
+            updateFlipCountLabel()
+        }
+    }
 
     // var cardbuttons: Array<UIButton>
     @IBOutlet private var cardButtons: [UIButton]!
@@ -60,7 +75,7 @@ class ViewController: UIViewController {
 
     }
 
-    private var emojiChoices = ["👻", "🎃", "☠️", "😈", "🍎", "🧟‍♂️", "🍬", "🍫", "🍭"]
+    private var emojiChoices = "👻🎃☠️😈🍎🧟‍♂️🍬🍫🍭"
 
     // identifier is an int
     // value is a string
@@ -73,13 +88,14 @@ class ViewController: UIViewController {
         
         // if emoji not set and we have emoji choices, put in dict
         if emoji[card] == nil, emojiChoices.count > 0 {
+            let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4random)
             // emojiChoices.count.arc4random
             // gen random num from zero to end-value, exclusive
             // arc4rand only works with unsigned ints (UInt32: is a struct as well)
             // you must convert beforehand
-
-            // "arc4random" is associated/extension of Int, emojiChoise.count will return an int
-            emoji[card] = emojiChoices.remove(at: emojiChoices.count.arc4random)
+            // "arc4random" is associated to/extension of Int, emojiChoise.count will return an int
+            let character = emojiChoices.remove(at: randomStringIndex)
+            emoji[card] = String(character)
         }
 
         // returns 'emoji[card.identifier]' but if nil, return "?"

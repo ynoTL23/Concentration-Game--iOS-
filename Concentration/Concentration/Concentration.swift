@@ -18,17 +18,21 @@ struct Concentration {
     // if there isnt JUST one face up card, return nil
     private var indexOfOneAndOnlyFaceUpCard: Int? {
         get {
-            var cardFoundIndex : Int?
-            for index in cards.indices {
-                if cards[index].isFaceUp {
-                    if cardFoundIndex == nil {
-                        cardFoundIndex = index
-                    } else {
-                        cardFoundIndex = nil
-                    }
-                }
-            }
-            return cardFoundIndex
+            // return all cards in which isFaceUp == True
+            return cards.indices.filter { cards[$0].isFaceUp }.oneAndOnly
+            
+            // ^ ^ ^ ^ ^ using closures
+//            var cardFoundIndex : Int?
+//            for index in cards.indices {
+//                if cards[index].isFaceUp {
+//                    if cardFoundIndex == nil {
+//                        cardFoundIndex = index
+//                    } else {
+//                        cardFoundIndex = nil
+//                    }
+//                }
+//            }
+//            return cardFoundIndex
         }
         
         // new index of the only card face up
@@ -87,3 +91,12 @@ struct Concentration {
     }
 
 }
+
+extension Collection {
+    var oneAndOnly : Element? {
+        // return value if count == 1, else nil
+        return count == 1 ? first : nil
+    }
+    
+}
+
